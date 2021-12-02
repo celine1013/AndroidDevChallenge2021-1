@@ -26,22 +26,37 @@ import com.example.androiddevchallenge.model.Animal
 import com.example.androiddevchallenge.ui.theme.MyTheme
 
 @ExperimentalFoundationApi
-@Preview
+@Preview("Light Theme", widthDp = 360, heightDp = 640)
+@Composable
+fun LightPreview() {
+    MyTheme {
+        MainScreen()
+    }
+}
+
+@ExperimentalFoundationApi
+@Preview("Dark Theme", widthDp = 360, heightDp = 640)
+@Composable
+fun DarkPreview() {
+    MyTheme {
+        MainScreen()
+    }
+}
+
+@ExperimentalFoundationApi
 @Composable
 fun MainScreen() {
-    MyTheme {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(color = MaterialTheme.colors.background)
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = MaterialTheme.colors.background)
 
-        ) {
-            Row(modifier = Modifier.background(color = MaterialTheme.colors.primary)) {
-                TopSearchBar()
-            }
-            Adoption()
-            MoreAnimals()
+    ) {
+        Row(modifier = Modifier.background(color = MaterialTheme.colors.primary)) {
+            TopSearchBar()
         }
+        Adoption()
+        MoreAnimals()
     }
 
 }
@@ -158,7 +173,9 @@ fun AnimalCard(animal: Animal) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Card(
-            modifier = Modifier.size(130.dp).fillMaxWidth(),
+            modifier = Modifier
+                .size(130.dp)
+                .fillMaxWidth(),
             shape = MaterialTheme.shapes.medium,
             elevation = 2.dp
         ) {

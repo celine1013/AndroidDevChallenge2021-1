@@ -19,11 +19,22 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
+import com.example.androiddevchallenge.ui.components.BottomNavBar
+import com.example.androiddevchallenge.ui.components.Screen
 import com.example.androiddevchallenge.ui.theme.MyTheme
 
 class MainActivity : AppCompatActivity() {
@@ -31,9 +42,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MyTheme {
-                MyApp()
-            }
+            MyApp()
         }
     }
 }
@@ -42,23 +51,67 @@ class MainActivity : AppCompatActivity() {
 @ExperimentalFoundationApi
 @Composable
 fun MyApp() {
-    MainScreen()
-}
-
-@ExperimentalFoundationApi
-@Preview("Light Theme", widthDp = 360, heightDp = 640)
-@Composable
-fun LightPreview() {
     MyTheme {
-        MyApp()
+        val allScreens = Screen.values().toList()
+        val navController = rememberNavController()
+        val backstackEntry = navController.currentBackStackEntryAsState()
+        val currentScreen = Screen.fromRoute(backstackEntry.value?.destination?.route)
+
+        Scaffold(
+            bottomBar = {
+                BottomNavBar(
+                    allScreens = allScreens,
+                    onTabSelected = { screen ->
+                        navController.navigate(screen.name)
+                    },
+                    currentScreen = currentScreen
+                )
+            }
+        ) { innerPadding ->
+            MyNavHost(navController, modifier = Modifier.padding(innerPadding))
+        }
     }
 }
 
 @ExperimentalFoundationApi
-@Preview("Dark Theme", widthDp = 360, heightDp = 640)
 @Composable
-fun DarkPreview() {
-    MyTheme(darkTheme = true) {
-        MyApp()
+fun MyNavHost(navController: NavHostController, modifier: Modifier = Modifier) {
+    NavHost(
+        navController = navController,
+        startDestination = Screen.Home.name,
+        modifier = modifier
+    ) {
+        composable(Screen.Home.name) {
+            MainScreen()
+        }
+        composable(Screen.Saved.name) {
+            Text("Saved Screen")
+        }
+        composable(Screen.Mail.name) {
+            Text("Mail Screen")
+        }
+        composable(Screen.Profile.name) {
+            Text("Profile Screen")
+        }
+        val animalRoute = Screen.Animals.name
+        composable(
+            route = "${animalRoute}/{name}",
+            arguments = listOf(
+                navArgument("name") {
+                    type = NavType.StringType
+                }
+            ),
+            deepLinks = listOf(
+                navDeepLink {
+                    uriPattern = "rally://$animalRoute/{name}"
+                }
+            ),
+        ) { entry ->
+            val animalName = entry.arguments?.getString("name")
+//            val account = UserData.getAccount(accountName)
+//            SingleAccountBody(account = account)
+        }
     }
 }
+
+
