@@ -24,7 +24,6 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -34,7 +33,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import com.example.androiddevchallenge.ui.components.BottomNavBar
-import com.example.androiddevchallenge.ui.components.Screen
+import com.example.androiddevchallenge.ui.screen.Screen
 import com.example.androiddevchallenge.ui.theme.MyTheme
 
 class MainActivity : AppCompatActivity() {
@@ -82,7 +81,7 @@ fun MyNavHost(navController: NavHostController, modifier: Modifier = Modifier) {
         modifier = modifier
     ) {
         composable(Screen.Home.name) {
-            MainScreen()
+            //MainScreen()
         }
         composable(Screen.Saved.name) {
             Text("Saved Screen")
@@ -93,21 +92,39 @@ fun MyNavHost(navController: NavHostController, modifier: Modifier = Modifier) {
         composable(Screen.Profile.name) {
             Text("Profile Screen")
         }
-        val animalRoute = Screen.Animals.name
+        val petRoute = Screen.Pet.name
         composable(
-            route = "${animalRoute}/{name}",
+            route = "${petRoute}/{id}",
             arguments = listOf(
-                navArgument("name") {
+                navArgument("id") {
                     type = NavType.StringType
                 }
             ),
             deepLinks = listOf(
                 navDeepLink {
-                    uriPattern = "rally://$animalRoute/{name}"
+                    uriPattern = "rally://$petRoute/{id}"
                 }
             ),
         ) { entry ->
-            val animalName = entry.arguments?.getString("name")
+            val animalName = entry.arguments?.getString("id")
+//            val account = UserData.getAccount(accountName)
+//            SingleAccountBody(account = account)
+        }
+        val animalRoute = Screen.Animals.name
+        composable(
+            route = "${animalRoute}/{species}",
+            arguments = listOf(
+                navArgument("species") {
+                    type = NavType.StringType
+                }
+            ),
+            deepLinks = listOf(
+                navDeepLink {
+                    uriPattern = "rally://$animalRoute/{species}"
+                }
+            ),
+        ) { entry ->
+            val animalName = entry.arguments?.getString("species")
 //            val account = UserData.getAccount(accountName)
 //            SingleAccountBody(account = account)
         }

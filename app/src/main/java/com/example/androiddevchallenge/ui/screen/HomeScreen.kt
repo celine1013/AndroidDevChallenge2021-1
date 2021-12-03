@@ -1,4 +1,4 @@
-package com.example.androiddevchallenge
+package com.example.androiddevchallenge.ui.screen
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -22,15 +22,19 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import com.example.androiddevchallenge.R
 import com.example.androiddevchallenge.model.Animal
 import com.example.androiddevchallenge.ui.theme.MyTheme
+import com.example.androiddevchallenge.ui.viewmodel.MainViewModel
 
 @ExperimentalFoundationApi
 @Preview("Light Theme", widthDp = 360, heightDp = 640)
 @Composable
 fun LightPreview() {
     MyTheme {
-        MainScreen()
+        HomeScreen()
     }
 }
 
@@ -39,13 +43,13 @@ fun LightPreview() {
 @Composable
 fun DarkPreview() {
     MyTheme {
-        MainScreen()
+        HomeScreen()
     }
 }
 
 @ExperimentalFoundationApi
 @Composable
-fun MainScreen() {
+fun HomeScreen(navController: NavController? = null) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -55,10 +59,15 @@ fun MainScreen() {
         Row(modifier = Modifier.background(color = MaterialTheme.colors.primary)) {
             TopSearchBar()
         }
-        Adoption()
-        MoreAnimals()
+        Adoption(
+            viewMore = {navController?.navigate(Screen.Animals.name + "/cat")},
+            showAnimalDetails = {animal ->  navController?.navigate(Screen.Pet.name + "/${animal.id}")}
+        )
+        MoreAnimals(
+            viewMore = {navController?.navigate(Screen.Animals.name + "/all")},
+            showAnimalList = {animal ->  navController?.navigate(Screen.Animals.name + "/${animal.species}")}
+        )
     }
-
 }
 
 @Composable
@@ -90,7 +99,7 @@ fun TopSearchBar() {
 
 @ExperimentalFoundationApi
 @Composable
-fun Adoption() {
+fun Adoption(viewMore: () -> Unit, showAnimalDetails: (Animal)->Unit) {
     Row(
         modifier = Modifier
             .padding(horizontal = 32.dp, vertical = 16.dp)
@@ -102,7 +111,7 @@ fun Adoption() {
         }
         Column(horizontalAlignment = Alignment.End, modifier = Modifier.fillMaxWidth()) {
             TextButton(
-                onClick = { /*TODO*/ },
+                onClick = { viewMore() },
             ) {
                 Text("View More", textAlign = TextAlign.End)
                 Icon(imageVector = Icons.Default.KeyboardArrowRight, contentDescription = "more")
@@ -114,13 +123,16 @@ fun Adoption() {
             .padding(horizontal = 32.dp)
             .fillMaxWidth()
     ) {
-        AnimalList(animalList = Animal.getDummyAnimals())
+        AnimalList(
+            animalList = Animal.getDummyAnimals(),
+            showDetails = showAnimalDetails
+        )
     }
 }
 
 @ExperimentalFoundationApi
 @Composable
-fun MoreAnimals() {
+fun MoreAnimals(viewMore: () -> Unit, showAnimalList: (Animal)->Unit) {
     Row(
         modifier = Modifier
             .padding(horizontal = 32.dp, vertical = 16.dp)
@@ -132,7 +144,7 @@ fun MoreAnimals() {
         }
         Column(horizontalAlignment = Alignment.End, modifier = Modifier.fillMaxWidth()) {
             TextButton(
-                onClick = { /*TODO*/ },
+                onClick = { viewMore() },
             ) {
                 Text("View More", textAlign = TextAlign.End)
                 Icon(imageVector = Icons.Default.KeyboardArrowRight, contentDescription = "more")
@@ -144,20 +156,23 @@ fun MoreAnimals() {
             .padding(horizontal = 32.dp)
             .fillMaxWidth()
     ) {
-        AnimalList(animalList = Animal.getDummyAnimals())
+        AnimalList(
+            animalList = Animal.getDummyAnimals(),
+            showDetails = showAnimalList
+        )
     }
 }
 
 @ExperimentalFoundationApi
 @Composable
-fun AnimalList(animalList: List<Animal>, displayNum: Int = 3) {
+fun AnimalList(animalList: List<Animal>, displayNum: Int = 3,  showDetails: (Animal)->Unit) {
     val scrollState = rememberLazyListState()
     LazyVerticalGrid(
         cells = GridCells.Fixed(3),
         state = scrollState,
         content = {
             items(displayNum) { index ->
-                AnimalCard(animal = animalList[index])
+                AnimalCard(animal = animalList[index], showDetails)
             }
         },
         contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp)
@@ -165,7 +180,7 @@ fun AnimalList(animalList: List<Animal>, displayNum: Int = 3) {
 }
 
 @Composable
-fun AnimalCard(animal: Animal) {
+fun AnimalCard(animal: Animal, showDetails: (Animal)->Unit) {
     Column(
         modifier = Modifier
             .clickable(onClick = { /* Ignoring onClick */ })
@@ -194,7 +209,7 @@ fun AnimalCard(animal: Animal) {
             color = MaterialTheme.colors.primary,
             modifier = Modifier
                 .padding(2.dp)
-                .clickable { /*todo*/ }
+                .clickable { showDetails(animal)}
         )
     }
 }

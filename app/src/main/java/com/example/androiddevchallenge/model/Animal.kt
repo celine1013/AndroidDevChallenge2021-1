@@ -3,6 +3,7 @@ package com.example.androiddevchallenge.model
 import com.example.androiddevchallenge.R
 
 data class Animal(
+    var id: String = "",
     var name: String = "",
     var species: String = "",
     var age: Double = 0.0,

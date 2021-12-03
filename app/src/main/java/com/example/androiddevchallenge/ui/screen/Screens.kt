@@ -1,4 +1,4 @@
-package com.example.androiddevchallenge.ui.components
+package com.example.androiddevchallenge.ui.screen
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
@@ -12,7 +12,8 @@ enum class Screen(val icon: ImageVector?, val addToTab: Boolean = true) {
     Saved(icon = Icons.Filled.Favorite),
     Mail(icon = Icons.Filled.Mail),
     Profile(icon = Icons.Filled.Person),
-    Animals(icon = null, addToTab = false);
+    Animals(icon = null, addToTab = false),
+    Pet(icon = null, addToTab = false);
 
     companion object {
         fun fromRoute(route: String?): Screen =

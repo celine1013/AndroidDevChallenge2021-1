@@ -19,6 +19,7 @@ package com.example.androiddevchallenge.ui.components
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import com.example.androiddevchallenge.ui.screen.Screen
 
 @Composable
 fun BottomNavBar(
