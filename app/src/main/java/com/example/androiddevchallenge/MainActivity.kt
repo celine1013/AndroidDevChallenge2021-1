@@ -33,6 +33,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import com.example.androiddevchallenge.ui.components.BottomNavBar
+import com.example.androiddevchallenge.ui.screen.HomeScreen
 import com.example.androiddevchallenge.ui.screen.Screen
 import com.example.androiddevchallenge.ui.theme.MyTheme
 
@@ -81,7 +82,7 @@ fun MyNavHost(navController: NavHostController, modifier: Modifier = Modifier) {
         modifier = modifier
     ) {
         composable(Screen.Home.name) {
-            //MainScreen()
+            HomeScreen(navController)
         }
         composable(Screen.Saved.name) {
             Text("Saved Screen")

@@ -99,7 +99,7 @@ fun TopSearchBar() {
 
 @ExperimentalFoundationApi
 @Composable
-fun Adoption(viewMore: () -> Unit, showAnimalDetails: (Animal)->Unit) {
+fun Adoption(viewMore: () -> Unit = {}, showAnimalDetails: (Animal)->Unit) {
     Row(
         modifier = Modifier
             .padding(horizontal = 32.dp, vertical = 16.dp)
