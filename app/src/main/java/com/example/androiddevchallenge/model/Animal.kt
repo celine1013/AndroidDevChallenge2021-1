@@ -17,10 +17,10 @@ data class Animal(
 
     companion object{
         fun getDummyAnimals() = listOf<Animal>(
-            Animal(name = "Tobby", species = "Cat", age = 1.5, photo = mutableListOf(R.drawable.cat_1)),
-            Animal(name = "Misty", species = "Cat", age = 3.0, photo = mutableListOf(R.drawable.cat_2)),
-            Animal(name = "Ollie", species = "Cat", age = 1.0, photo = mutableListOf(R.drawable.cat_3)),
-            Animal(name = "Pixie", species = "Cat", age = 5.0, photo = mutableListOf(R.drawable.cat_4)),
+            Animal(id = "1", name = "Tobby", species = "Cat", age = 1.5, photo = mutableListOf(R.drawable.cat_1)),
+            Animal(id = "2", name = "Misty", species = "Cat", age = 3.0, photo = mutableListOf(R.drawable.cat_2)),
+            Animal(id = "3", name = "Ollie", species = "Cat", age = 1.0, photo = mutableListOf(R.drawable.cat_3)),
+            Animal(id = "4", name = "Pixie", species = "Cat", age = 5.0, photo = mutableListOf(R.drawable.cat_4)),
         )
     }
 }

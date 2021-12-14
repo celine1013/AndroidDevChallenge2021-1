@@ -60,12 +60,12 @@ fun HomeScreen(navController: NavController? = null) {
             TopSearchBar()
         }
         Adoption(
-            viewMore = {navController?.navigate(Screen.Animals.name + "/cat")},
-            showAnimalDetails = {animal ->  navController?.navigate(Screen.Pet.name + "/${animal.id}")}
+            viewMore = {navController?.navigate("pet/cat")},
+            showAnimalDetails = {pet ->  navController?.navigate("pet/${pet.id}")}
         )
         MoreAnimals(
-            viewMore = {navController?.navigate(Screen.Animals.name + "/all")},
-            showAnimalList = {animal ->  navController?.navigate(Screen.Animals.name + "/${animal.species}")}
+            viewMore = {navController?.navigate("pet")},
+            showAnimalList = {}
         )
     }
 }

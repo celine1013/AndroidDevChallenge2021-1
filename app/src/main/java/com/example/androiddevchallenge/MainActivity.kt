@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -33,6 +34,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import com.example.androiddevchallenge.ui.components.BottomNavBar
+import com.example.androiddevchallenge.ui.components.MyNavHost
 import com.example.androiddevchallenge.ui.screen.HomeScreen
 import com.example.androiddevchallenge.ui.screen.Screen
 import com.example.androiddevchallenge.ui.theme.MyTheme
@@ -52,19 +54,18 @@ class MainActivity : AppCompatActivity() {
 @Composable
 fun MyApp() {
     MyTheme {
-        val allScreens = Screen.values().toList()
         val navController = rememberNavController()
-        val backstackEntry = navController.currentBackStackEntryAsState()
-        val currentScreen = Screen.fromRoute(backstackEntry.value?.destination?.route)
+        val navBackStackEntry by navController.currentBackStackEntryAsState()
+        val currentRoute = navBackStackEntry?.destination?.route
 
         Scaffold(
             bottomBar = {
                 BottomNavBar(
-                    allScreens = allScreens,
+                    allScreens = listOf(Screen.Home, Screen.Saved, Screen.Mail, Screen.Profile),
                     onTabSelected = { screen ->
-                        navController.navigate(screen.name)
+                        navController.navigate(screen.route)
                     },
-                    currentScreen = currentScreen
+                    currentRoute = currentRoute
                 )
             }
         ) { innerPadding ->
@@ -73,63 +74,6 @@ fun MyApp() {
     }
 }
 
-@ExperimentalFoundationApi
-@Composable
-fun MyNavHost(navController: NavHostController, modifier: Modifier = Modifier) {
-    NavHost(
-        navController = navController,
-        startDestination = Screen.Home.name,
-        modifier = modifier
-    ) {
-        composable(Screen.Home.name) {
-            HomeScreen(navController)
-        }
-        composable(Screen.Saved.name) {
-            Text("Saved Screen")
-        }
-        composable(Screen.Mail.name) {
-            Text("Mail Screen")
-        }
-        composable(Screen.Profile.name) {
-            Text("Profile Screen")
-        }
-        val petRoute = Screen.Pet.name
-        composable(
-            route = "${petRoute}/{id}",
-            arguments = listOf(
-                navArgument("id") {
-                    type = NavType.StringType
-                }
-            ),
-            deepLinks = listOf(
-                navDeepLink {
-                    uriPattern = "rally://$petRoute/{id}"
-                }
-            ),
-        ) { entry ->
-            val animalName = entry.arguments?.getString("id")
-//            val account = UserData.getAccount(accountName)
-//            SingleAccountBody(account = account)
-        }
-        val animalRoute = Screen.Animals.name
-        composable(
-            route = "${animalRoute}/{species}",
-            arguments = listOf(
-                navArgument("species") {
-                    type = NavType.StringType
-                }
-            ),
-            deepLinks = listOf(
-                navDeepLink {
-                    uriPattern = "rally://$animalRoute/{species}"
-                }
-            ),
-        ) { entry ->
-            val animalName = entry.arguments?.getString("species")
-//            val account = UserData.getAccount(accountName)
-//            SingleAccountBody(account = account)
-        }
-    }
-}
+
 
 
