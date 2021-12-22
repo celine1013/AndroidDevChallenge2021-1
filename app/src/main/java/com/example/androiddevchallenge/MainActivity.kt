@@ -18,44 +18,62 @@ package com.example.androiddevchallenge
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
+import com.example.androiddevchallenge.ui.components.BottomNavBar
+import com.example.androiddevchallenge.ui.components.MyNavHost
+import com.example.androiddevchallenge.ui.screen.HomeScreen
+import com.example.androiddevchallenge.ui.screen.Screen
 import com.example.androiddevchallenge.ui.theme.MyTheme
 
 class MainActivity : AppCompatActivity() {
+    @ExperimentalFoundationApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MyTheme {
-                MyApp()
-            }
+            MyApp()
         }
     }
 }
 
 // Start building your app here!
+@ExperimentalFoundationApi
 @Composable
 fun MyApp() {
-    Surface(color = MaterialTheme.colors.background) {
-        Text(text = "Ready... Set... GO!")
-    }
-}
-
-@Preview("Light Theme", widthDp = 360, heightDp = 640)
-@Composable
-fun LightPreview() {
     MyTheme {
-        MyApp()
+        val navController = rememberNavController()
+        val navBackStackEntry by navController.currentBackStackEntryAsState()
+        val currentRoute = navBackStackEntry?.destination?.route
+
+        Scaffold(
+            bottomBar = {
+                BottomNavBar(
+                    allScreens = listOf(Screen.Home, Screen.Saved, Screen.Mail, Screen.Profile),
+                    onTabSelected = { screen ->
+                        navController.navigate(screen.route)
+                    },
+                    currentRoute = currentRoute
+                )
+            }
+        ) { innerPadding ->
+            MyNavHost(navController, modifier = Modifier.padding(innerPadding))
+        }
     }
 }
 
-@Preview("Dark Theme", widthDp = 360, heightDp = 640)
-@Composable
-fun DarkPreview() {
-    MyTheme(darkTheme = true) {
-        MyApp()
-    }
-}
+
+
+
