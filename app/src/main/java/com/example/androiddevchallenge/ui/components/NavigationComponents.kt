@@ -66,7 +66,7 @@ private fun NavGraphBuilder.addPetGraph(navController: NavController) {
         composable(PetScreen.PetDetails.route) { entry ->
             val petId = entry.arguments?.getString("petId")
             requireNotNull(petId) { "petId parameter wasn't found. Please make sure it's set!" }
-            Text("Pet: $petId")
+            PetScreen(petId)
         }
         composable(PetScreen.PetList.route) { entry ->
             val species = entry.arguments?.getString("species")
